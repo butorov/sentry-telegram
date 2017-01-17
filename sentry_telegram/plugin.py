@@ -49,6 +49,7 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
             {
                 'name': 'api_token',
                 'label': 'BotAPI token',
+                'type': 'text',
                 'help': 'Read more: https://core.telegram.org/bots/api#authorizing-your-bot',
                 'placeholder': '123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11',
                 'validators': [],
@@ -57,6 +58,7 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
             {
                 'name': 'receivers',
                 'label': 'Receivers',
+                'type': 'textarea',
                 'help': 'Enter receivers IDs (one per line). Personal messages, group chats and channels also available.',
                 'validators': [],
                 'required': True,
