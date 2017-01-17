@@ -4,6 +4,7 @@ import logging
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
+from sentry.plugins import register
 from sentry.plugins.bases import notify
 from sentry.http import safe_urlopen
 from sentry.utils.safe import safe_execute
@@ -95,3 +96,6 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
         url = self.build_url(group.project)
         for receiver in self.get_receivers(group.project):
             safe_execute(self.send_message, url, payload, receiver, _with_transaction=False)
+
+
+register(TelegramNotificationsPlugin)
