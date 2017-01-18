@@ -7,11 +7,13 @@ DISCLAIMER: Tested only with Sentry 8.9.0
 from django.conf import settings
 
 
-__version__ = '0.0.5'
+__version__ = '0.0.6'
 
 
 if settings.configured:
-    from sentry.plugins import register
-    from .plugin import TelegramNotificationsPlugin
+    from sentry.plugins import plugins, register
 
-    register(TelegramNotificationsPlugin)
+    from plugin import TelegramNotificationsPlugin
+
+    if TelegramNotificationsPlugin.slug not in [plugin.slug for plugin in plugins.all()]:
+        register(TelegramNotificationsPlugin)

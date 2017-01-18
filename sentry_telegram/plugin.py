@@ -4,7 +4,6 @@ import logging
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-from sentry.plugins import register
 from sentry.plugins.bases import notify
 from sentry.http import safe_urlopen
 from sentry.utils.safe import safe_execute
@@ -25,20 +24,22 @@ class TelegramNotificationsOptionsForm(notify.NotificationConfigurationForm):
 
 
 class TelegramNotificationsPlugin(notify.NotificationPlugin):
+    title = 'Telegram Notifications'
+    slug = 'sentry_telegram'
+    description = package_doc
+    version = __version__
     author = 'Viacheslav Butorov'
     author_url = 'https://github.com/butorov/sentry-telegram'
-    version = __version__
-    description = package_doc
     resource_links = [
         ('Bug Tracker', 'https://github.com/butorov/sentry-telegram/issues'),
         ('Source', 'https://github.com/butorov/sentry-telegram'),
     ]
 
-    slug = 'sentry_telegram'
-    title = 'Telegram Notifications'
-    conf_title = title
     conf_key = 'sentry_telegram'
+    conf_title = title
+
     project_conf_form = TelegramNotificationsOptionsForm
+
     logger = logging.getLogger('sentry.plugins.sentry_telegram')
 
     def is_configured(self, project, **kwargs):
@@ -105,6 +106,3 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
         self.logger.debug('Built url: %s' % url)
         for receiver in receivers:
             safe_execute(self.send_message, url, payload, receiver, _with_transaction=False)
-
-
-register(TelegramNotificationsPlugin)
