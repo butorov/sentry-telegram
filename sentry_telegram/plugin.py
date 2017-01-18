@@ -87,16 +87,23 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
 
     def send_message(self, url, payload, receiver):
         payload['chat_id'] = receiver
-        return safe_urlopen(
+        self.logger.debug('Sending message to %s ' % receiver)
+        response = safe_urlopen(
             method='POST',
             url=url,
             json=payload,
         )
+        self.logger.debug('Response code: %s, content: %s' % (response.status_code, response.content))
 
     def notify_users(self, group, event, fail_silently=False):
+        self.logger.debug('Received notification for event: %s' % event)
+        receivers = self.get_receivers(group.project)
+        self.logger.debug('for receivers: %s' % receivers)
         payload = self.build_message(group, event)
+        self.logger.debug('Built payload: %s' % payload)
         url = self.build_url(group.project)
-        for receiver in self.get_receivers(group.project):
+        self.logger.debug('Built url: %s' % url)
+        for receiver in receivers:
             safe_execute(self.send_message, url, payload, receiver, _with_transaction=False)
 
 

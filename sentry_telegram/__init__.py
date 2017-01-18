@@ -7,7 +7,7 @@ DISCLAIMER: Tested only with Sentry 8.9.0
 from django.conf import settings
 
 
-__version__ = '0.0.4'
+__version__ = '0.0.5'
 
 
 if settings.configured:
