@@ -66,11 +66,10 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
             },
         ]
 
-    def build_message(self, activity):
-        group = activity.group
+    def build_message(self, group, event):
         text = '*[Sentry]* {project_name} {level}\n{url}'.format(**{
             'project_name': group.project.name,
-            'level': activity.type,
+            'level': event.get_tag('level'),
             'url': group.get_absolute_url(),
         })
         return {
@@ -97,13 +96,13 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
         )
         self.logger.debug('Response code: %s, content: %s' % (response.status_code, response.content))
 
-    def notify_about_activity(self, activity):
-        self.logger.debug('Received notification for activity: %s' % activity)
-        receivers = self.get_receivers(activity.project)
+    def notify_users(self, group, event, fail_silently=False):
+        self.logger.debug('Received notification for event: %s' % event)
+        receivers = self.get_receivers(group.project)
         self.logger.debug('for receivers: %s' % receivers)
-        payload = self.build_message(activity)
+        payload = self.build_message(group, event)
         self.logger.debug('Built payload: %s' % payload)
-        url = self.build_url(activity.project)
+        url = self.build_url(group.project)
         self.logger.debug('Built url: %s' % url)
         for receiver in receivers:
             safe_execute(self.send_message, url, payload, receiver, _with_transaction=False)
