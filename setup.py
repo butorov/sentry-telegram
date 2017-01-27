@@ -21,7 +21,7 @@ setup(
     author_email='butorovv@gmail.com',
     description=sentry_telegram.__doc__,
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Environment :: Console',
         'Intended Audience :: Developers',
         'Intended Audience :: System Administrators',
