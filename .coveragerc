@@ -1,0 +1,6 @@
+[run]
+branch = true
+
+[report]
+show_missing = true
+precision = 2
