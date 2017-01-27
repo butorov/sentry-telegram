@@ -7,9 +7,6 @@ import sentry_telegram
 requirements = [
     'sentry==8.9.0',
 ]
-test_requirements = [
-    'coverage==4.3.4',
-]
 
 
 setup(
@@ -32,5 +29,4 @@ setup(
     ],
     include_package_data=True,
     install_requires=requirements,
-    tests_require=test_requirements,
 )
