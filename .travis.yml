@@ -1,4 +1,8 @@
 language: python
 python:
   - "2.7"
+install:
+  - travis_retry pip install tox
 script: tox
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
