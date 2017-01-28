@@ -1,5 +1,5 @@
-Sentry Telegram |travis| |codecov|
-==================================
+Sentry Telegram |travis| |codecov| |pypi|
+=========================================
 
 Plugin for Sentry which allows sending notification via `Telegram <https://telegram.org/>`_ messenger.
 
@@ -36,6 +36,9 @@ Installation
    :target: https://travis-ci.org/butorov/sentry-telegram
    :alt: Build Status
 
-.. |codecov| image:: https://codecov.io/gh/butorov/sentry-telegram/coverage.svg?branch=master
+.. |codecov| image:: https://codecov.io/gh/butorov/sentry-telegram/branch/master/graph/badge.svg
    :target: https://codecov.io/gh/butorov/sentry-telegram?branch=master
    :alt: Coverage Status
+
+.. |pypi| image:: https://badge.fury.io/py/sentry-telegram.svg
+   :target: https://badge.fury.io/py/sentry-telegram
