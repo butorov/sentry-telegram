@@ -15,5 +15,5 @@ if settings.configured:
 
     from plugin import TelegramNotificationsPlugin
 
-    if TelegramNotificationsPlugin.slug not in [plugin.slug for plugin in plugins.all()]:
+    if not plugins.exists(TelegramNotificationsPlugin.slug):
         register(TelegramNotificationsPlugin)
