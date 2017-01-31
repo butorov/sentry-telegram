@@ -4,8 +4,8 @@ from setuptools import setup
 
 import sentry_telegram
 
-requirements = [
-    'sentry==8.9.0',
+tests_require = [
+    'sentry==8.12.0',
 ]
 
 
@@ -16,7 +16,7 @@ setup(
     url='https://github.com/butorov/sentry-telegram',
     author='Viacheslav Butorov',
     author_email='butorovv@gmail.com',
-    description=sentry_telegram.__doc__,
+    description='Plugin for Sentry which allows sending notification via Telegram messenger.',
     license='MIT',
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -30,5 +30,5 @@ setup(
         'Programming Language :: Python :: Implementation :: CPython',
     ],
     include_package_data=True,
-    install_requires=requirements,
+    tests_require=tests_require,
 )

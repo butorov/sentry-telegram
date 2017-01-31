@@ -41,4 +41,4 @@ Installation
    :alt: Coverage Status
 
 .. |pypi| image:: https://badge.fury.io/py/sentry-telegram.svg
-   :target: https://badge.fury.io/py/sentry-telegram
+   :target: https://pypi.python.org/pypi/sentry-telegram

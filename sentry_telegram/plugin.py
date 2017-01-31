@@ -83,7 +83,7 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
     def get_receivers(self, project):
         receivers = self.get_option('receivers', project)
         if not receivers:
-            return ()
+            return []
         return filter(bool, receivers.strip().splitlines())
 
     def send_message(self, url, payload, receiver):
@@ -99,7 +99,7 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
     def notify_users(self, group, event, fail_silently=False):
         self.logger.debug('Received notification for event: %s' % event)
         receivers = self.get_receivers(group.project)
-        self.logger.debug('for receivers: %s' % receivers)
+        self.logger.debug('for receivers: %s' % ', '.join(receivers or ()))
         payload = self.build_message(group, event)
         self.logger.debug('Built payload: %s' % payload)
         url = self.build_url(group.project)
