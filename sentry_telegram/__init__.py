@@ -1,13 +1,11 @@
 # coding: utf-8
 """
 Plugin for Sentry which allows sending notification via Telegram messenger.
-
-DISCLAIMER: Tested only with Sentry 8.9.0
 """
 from django.conf import settings
 
 
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 
 if settings.configured:
