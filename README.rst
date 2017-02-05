@@ -8,6 +8,13 @@ Plugin for Sentry which allows sending notification via `Telegram <https://teleg
     Due to this, presented plugin tested only with Sentry 8.12.0 and 8.9.0.
 
 
+How will it look like
+---------------------
+
+.. image:: docs/images/telegram-window.png
+   :target: docs/images/telegram-window.png
+   :alt: How will it look like
+
 Installation
 ------------
 
