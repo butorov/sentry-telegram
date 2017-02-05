@@ -11,5 +11,6 @@ env:
   - TOX_ENV=sentry810
   - TOX_ENV=sentry811
   - TOX_ENV=sentry812
+  - TOX_ENV=sentry813
 after_success:
   - bash <(curl -s https://codecov.io/bash)
