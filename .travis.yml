@@ -12,5 +12,6 @@ env:
   - TOX_ENV=py27-sentry811
   - TOX_ENV=py27-sentry812
   - TOX_ENV=py27-sentry813
+  - TOX_ENV=py27-sentry815
 after_success:
   - bash <(curl -s https://codecov.io/bash)
