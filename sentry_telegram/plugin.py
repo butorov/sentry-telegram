@@ -24,7 +24,7 @@ class TelegramNotificationsOptionsForm(notify.NotificationConfigurationForm):
 
     message_template = forms.CharField(
         label=_('Message template'),
-        widget=forms.TextInput(),
+        widget=forms.Textarea(attrs={'class': 'span4'}),
         help_text=_('Set in standard python\'s {}-format convention, available names are: '
                     '{project_name}, {url}, {title}, {message}, {tag[%your_tag%]}'),
         initial='*[Sentry]* {project_name} {tag[level]}: *{title}*\n\n{message}\n\n{url}'
@@ -96,7 +96,7 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
 
         template = self.get_message_template(group.project)
 
-        text = template.format_map(names)
+        text = template.format(**names)
 
         return {
             'text': text,
