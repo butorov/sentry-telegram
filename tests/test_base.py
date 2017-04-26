@@ -21,6 +21,7 @@ class BaseTest(PluginTestCase):
     def test_complex_send_notification(self):
         self.initialized_plugin.set_option('receivers', '123', self.project)
         self.initialized_plugin.set_option('api_token', 'api:token', self.project)
+        self.initialized_plugin.set_option('message_template', '*[Sentry]* {project_name} {tag[level]}: {title}\n{message}\n{url}', self.project)
         event = create_sample_event(self.project, platform='python')
         notification = Notification(event=event)
         with patch('requests.sessions.Session.request') as request:
@@ -31,7 +32,7 @@ class BaseTest(PluginTestCase):
                     method='POST',
                     headers={'Content-Type': 'application/json'},
                     url=u'https://api.telegram.org/botapi:token/sendMessage',
-                    json={'text': '*[Sentry]* Bar error\nhttp://testserver/baz/bar/issues/1/', 'parse_mode': 'Markdown', 'chat_id': '123'},
+                    json={'text': '*[Sentry]* Bar error: This is an example python exception\nThis is an example python exception\nhttp://testserver/baz/bar/issues/1/', 'parse_mode': 'Markdown', 'chat_id': '123'},
                     timeout=30,
                     verify=True,
                 ),
