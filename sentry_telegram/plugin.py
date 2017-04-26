@@ -75,7 +75,7 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
             {
                 'name': 'message_template',
                 'label': 'Message Template',
-                'type': 'text',
+                'type': 'textarea',
                 'help': 'Set in standard python\'s {}-format convention, available names are: '
                     '{project_name}, {url}, {title}, {message}, {tag[%your_tag%]}',
                 'validators': [],
