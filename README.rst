@@ -28,7 +28,7 @@ Installation
 
 .. code-block:: python
 
-    INSTALLED_APPS = INSTALLED_APPS + ['sentry_telegram']
+    INSTALLED_APPS += ('sentry_telegram',)
 
 3. Restart your Sentry.
 4. Go to your Sentry web interface. On ``Settings`` page of one of your project.
