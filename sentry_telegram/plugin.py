@@ -22,6 +22,14 @@ class TelegramNotificationsOptionsForm(notify.NotificationConfigurationForm):
         widget=forms.Textarea(attrs={'class': 'span6'}),
         help_text=_('Enter receivers IDs (one per line). Personal messages, group chats and channels also available.'))
 
+    message_template = forms.CharField(
+        label=_('Message template'),
+        widget=forms.Textarea(attrs={'class': 'span4'}),
+        help_text=_('Set in standard python\'s {}-format convention, available names are: '
+                    '{project_name}, {url}, {title}, {message}, {tag[%your_tag%]}'),
+        initial='*[Sentry]* {project_name} {tag[level]}: *{title}*\n\n{message}\n\n{url}'
+    )
+
 
 class TelegramNotificationsPlugin(notify.NotificationPlugin):
     title = 'Telegram Notifications'
@@ -64,14 +72,32 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
                 'validators': [],
                 'required': True,
             },
+            {
+                'name': 'message_template',
+                'label': 'Message Template',
+                'type': 'textarea',
+                'help': 'Set in standard python\'s {}-format convention, available names are: '
+                    '{project_name}, {url}, {title}, {message}, {tag[%your_tag%]}',
+                'validators': [],
+                'required': True,
+                'default': '*[Sentry]* {project_name} {tag[level]}: *{title}*\n\n{message}\n\n{url}'
+            },
         ]
 
     def build_message(self, group, event):
-        text = '*[Sentry]* {project_name} {level}\n{url}'.format(**{
+
+        names = {
+            'title': event.title,
+            'tag': {k:v for k, v in event.tags},
+            'message': event.message,
             'project_name': group.project.name,
-            'level': event.get_tag('level'),
             'url': group.get_absolute_url(),
-        })
+        }
+
+        template = self.get_message_template(group.project)
+
+        text = template.format(**names)
+
         return {
             'text': text,
             'parse_mode': 'Markdown',
@@ -79,6 +105,9 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
 
     def build_url(self, project):
         return 'https://api.telegram.org/bot%s/sendMessage' % self.get_option('api_token', project)
+
+    def get_message_template(self, project):
+        return self.get_option('message_template', project)
 
     def get_receivers(self, project):
         receivers = self.get_option('receivers', project)
