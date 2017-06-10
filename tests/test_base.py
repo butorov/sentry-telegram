@@ -1,5 +1,5 @@
 # coding: utf-8
-from mock import patch
+from mock import call, patch
 import pytest
 
 import sentry
@@ -32,15 +32,17 @@ class BaseTest(PluginTestCase):
         notification = Notification(event=event)
         with patch('requests.sessions.Session.request') as request:
             self.initialized_plugin.notify(notification)
-            assert request.assert_called_once_with(
-                allow_redirects=False,
-                method='POST',
-                headers={'Content-Type': 'application/json'},
-                url=u'https://api.telegram.org/botapi:token/sendMessage',
-                json={'text': u'*[Sentry]* Bar error: This is an example python exception\nThis is an example python exception\nhttp://testserver/baz/bar/issues/1/', 'parse_mode': 'Markdown', 'chat_id': '123'},
-                timeout=30,
-                verify=True,
-            )
+            assert request.call_args_list == [
+                call(
+                    allow_redirects=False,
+                    method='POST',
+                    headers={'Content-Type': 'application/json'},
+                    url=u'https://api.telegram.org/botapi:token/sendMessage',
+                    json={'text': u'*[Sentry]* Bar error: This is an example python exception\nThis is an example python exception\nhttp://testserver/baz/bar/issues/1/', 'parse_mode': 'Markdown', 'chat_id': '123'},
+                    timeout=30,
+                    verify=True,
+                ),
+            ]
 
     @pytest.mark.skipif(sentry.__version__.startswith('8.9.0'), reason="sentry 8.9.0 message text equals to title")
     def test_complex_send_notification(self):
