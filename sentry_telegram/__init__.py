@@ -5,7 +5,7 @@ Plugin for Sentry which allows sending notification via Telegram messenger.
 from django.conf import settings
 
 
-__version__ = '0.1.2'
+__version__ = '0.2.0'
 
 
 if settings.configured:
