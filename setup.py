@@ -4,10 +4,6 @@ from setuptools import setup
 
 import sentry_telegram
 
-tests_require = [
-    'sentry==8.12.0',
-]
-
 
 setup(
     name='sentry_telegram',
@@ -30,5 +26,4 @@ setup(
         'Programming Language :: Python :: Implementation :: CPython',
     ],
     include_package_data=True,
-    tests_require=tests_require,
 )
