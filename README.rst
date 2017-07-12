@@ -5,7 +5,7 @@ Plugin for Sentry which allows sending notification via `Telegram <https://teleg
 
     **DISCLAIMER**: Sentry API is under development and `is not frozen <https://docs.sentry.io/server/plugins/>`_.
 
-    Presented plugin tested with Sentry from 8.9 to 8.17.
+    Presented plugin tested with Sentry from 8.9 to 8.18.
 
 
 How will it look like
