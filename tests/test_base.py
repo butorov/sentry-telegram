@@ -68,9 +68,9 @@ class BaseTest(PluginTestCase):
                 allow_redirects=False,
                 method='POST',
                 headers={'Content-Type': 'application/json'},
-                url=u'https://api.telegram.org/botapi:token/sendMessage',
+                url='https://api.telegram.org/botapi:token/sendMessage',
                 json={
-                    'text': u'*[Sentry]* Bar error: This is an example python exception\nThis is an example python exception raven.scripts.runner in main\nhttp://testserver/baz/bar/issues/1/',
+                    'text': '*[Sentry]* Bar error: This is an example Python exception\nThis is an example Python exception raven.scripts.runner in main\nhttp://testserver/baz/bar/issues/1/',
                     'parse_mode': 'Markdown',
                     'chat_id': '123',
                 },
