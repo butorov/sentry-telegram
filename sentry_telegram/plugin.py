@@ -155,6 +155,6 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
         proxy = self.get_option('socks_proxy', group.project)
         for receiver in receivers:
             if proxy:
-                safe_execute(self.send_message, url, payload, receiver, proxy, _with_transaction=False)
+                safe_execute(self.send_message_through_proxy, url, payload, receiver, proxy, _with_transaction=False)
             else:
                 safe_execute(self.send_message, url, payload, receiver, _with_transaction=False)
