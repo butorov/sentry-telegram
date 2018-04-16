@@ -1,5 +1,6 @@
 # coding: utf-8
 import logging
+import requests
 
 from django import forms
 from django.utils.translation import ugettext_lazy as _
@@ -28,6 +29,11 @@ class TelegramNotificationsOptionsForm(notify.NotificationConfigurationForm):
         help_text=_('Set in standard python\'s {}-format convention, available names are: '
                     '{project_name}, {url}, {title}, {message}, {tag[%your_tag%]}'),
         initial='*[Sentry]* {project_name} {tag[level]}: *{title}*\n```{message}```\n{url}'
+    )
+    socks_proxy = forms.CharField(
+        label=_('Socks5 proxy'),
+        widget=forms.TextInput(attrs={'placeholder': 'socks5://{user}:{pass}@{host}:{port}'}),
+        help_text=_('Enter socks5 proxy.')
     )
 
 
@@ -82,6 +88,14 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
                 'required': True,
                 'default': '*[Sentry]* {project_name} {tag[level]}: *{title}*\n```{message}```\n{url}'
             },
+            {
+                'name': 'socks_proxy',
+                'label': 'Socks Proxy',
+                'type': 'text',
+                'help': 'Enter socks5 proxy.',
+                'validators': [],
+                'required': False,
+            },
         ]
 
     def build_message(self, group, event):
@@ -124,6 +138,12 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
         )
         self.logger.debug('Response code: %s, content: %s' % (response.status_code, response.content))
 
+    def send_message_through_proxy(self, url, payload, receiver, proxy):
+        payload['chat_id'] = receiver
+        self.logger.debug('Sending message to %s . Using proxy' % receiver)
+        response = requests.post(url, data=payload, proxies=dict(http=proxy, https=proxy))
+        self.logger.debug('Response code: %s, content: %s' % (response.status_code, response.content))
+
     def notify_users(self, group, event, fail_silently=False):
         self.logger.debug('Received notification for event: %s' % event)
         receivers = self.get_receivers(group.project)
@@ -132,5 +152,9 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
         self.logger.debug('Built payload: %s' % payload)
         url = self.build_url(group.project)
         self.logger.debug('Built url: %s' % url)
+        proxy = self.get_option('socks_proxy', group.project)
         for receiver in receivers:
-            safe_execute(self.send_message, url, payload, receiver, _with_transaction=False)
+            if proxy:
+                safe_execute(self.send_message, url, payload, receiver, proxy, _with_transaction=False)
+            else:
+                safe_execute(self.send_message, url, payload, receiver, _with_transaction=False)
