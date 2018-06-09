@@ -65,7 +65,7 @@ class BaseTest(PluginTestCase):
         )
 
     @pytest.mark.skipif(V('8.19.0') < sentry_version or sentry_version <= V('8.9.0'), reason='sentry 8.9.0 message text equals to title')
-    def test_complex_send_notification(self):
+    def test_complex_send_notification_9_19(self):
         request = self.send_notification_helper()
         assert request.call_count == 1
         self.assert_notification_helper(
