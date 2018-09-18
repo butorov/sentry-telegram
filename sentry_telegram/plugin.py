@@ -7,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from sentry.plugins.bases import notify
 from sentry.http import safe_urlopen
 from sentry.utils.safe import safe_execute
+from collections import defaultdict
 
 from . import __version__, __doc__ as package_doc
 
@@ -77,7 +78,7 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
                 'label': 'Message Template',
                 'type': 'textarea',
                 'help': 'Set in standard python\'s {}-format convention, available names are: '
-                    '{project_name}, {url}, {title}, {message}, {tag[%your_tag%]}',
+                    '{project_name}, {url}, {title}, {message}, {tag[%your_tag%]}. Undefined tags will be shown as [NA]',
                 'validators': [],
                 'required': True,
                 'default': '*[Sentry]* {project_name} {tag[level]}: *{title}*\n```{message}```\n{url}'
@@ -85,9 +86,11 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
         ]
 
     def build_message(self, group, event):
+        the_tags = defaultdict(lambda: '[NA]')
+        the_tags.update({k:v for k, v in event.tags})
         names = {
             'title': event.title,
-            'tag': {k:v for k, v in event.tags},
+            'tag': the_tags,
             'message': event.message,
             'project_name': group.project.name,
             'url': group.get_absolute_url(),
