@@ -87,7 +87,7 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
     def build_message(self, group, event):
         names = {
             'title': event.title,
-            'tag': {k:v for k, v in event.tags},
+            'tag': {k: v for k, v in event.tags},
             'message': event.message,
             'project_name': group.project.name,
             'url': group.get_absolute_url(),

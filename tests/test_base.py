@@ -34,11 +34,18 @@ class BaseTest(PluginTestCase):
             '*[Sentry]* {project_name} {tag[level]}: {title}\n{message}\n{url}',
             self.project,
         )
-        event = create_sample_event(self.project, platform='python')
+        event = create_sample_event(self.project, platform=self.get_test_platform_name())
         notification = Notification(event=event)
         with patch('requests.sessions.Session.request') as request:
             self.initialized_plugin.notify(notification)
             return request
+
+    @staticmethod
+    def get_test_platform_name():
+        if sentry_version < V('9'):
+            return 'python'
+        else:
+            return 'Python'
 
     @staticmethod
     def assert_notification_helper(request_call, message_text):
