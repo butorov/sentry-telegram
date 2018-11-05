@@ -7,19 +7,8 @@ install:
   - travis_retry pip install tox
 script: tox -e $TOX_ENV
 env:
-  - TOX_ENV=py27-sentry89
-  - TOX_ENV=py27-sentry810
-  - TOX_ENV=py27-sentry811
-  - TOX_ENV=py27-sentry812
-  - TOX_ENV=py27-sentry813
-  - TOX_ENV=py27-sentry814
-  - TOX_ENV=py27-sentry815
-  - TOX_ENV=py27-sentry816
-  - TOX_ENV=py27-sentry817
-  - TOX_ENV=py27-sentry818
-  - TOX_ENV=py27-sentry819
-  - TOX_ENV=py27-sentry820
   - TOX_ENV=py27-sentry821
   - TOX_ENV=py27-sentry822
+  - TOX_ENV=py27-sentry9
 after_success:
   - bash <(curl -s https://codecov.io/bash)
