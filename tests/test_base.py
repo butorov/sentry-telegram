@@ -22,6 +22,9 @@ class BaseTest(PluginTestCase):
     def setUp(self):
         super(BaseTest, self).setUp()
         self.initialized_plugin = self.plugin()
+        self.message_text = '*[Sentry]* Bar error: This is an example %(platform)s exception\n' \
+                            'This is an example %(platform)s exception raven.scripts.runner in main\n' \
+                            'http://testserver/baz/bar/issues/1/' % {'platform': self.get_platform_name_str()}
 
     def test_is_registered(self):
         assert plugins.get('sentry_telegram').slug == self.plugin.slug
@@ -39,6 +42,13 @@ class BaseTest(PluginTestCase):
         with patch('requests.sessions.Session.request') as request:
             self.initialized_plugin.notify(notification)
             return request
+
+    @staticmethod
+    def get_platform_name_str():
+        if sentry_version < V('9'):
+            return 'Python'
+        else:
+            return 'python'
 
     @staticmethod
     def assert_notification_helper(request_call, message_text):
@@ -70,7 +80,7 @@ class BaseTest(PluginTestCase):
         assert request.call_count == 1
         self.assert_notification_helper(
             request.call_args_list[0][1],
-            '*[Sentry]* Bar error: This is an example python exception\nThis is an example python exception raven.scripts.runner in main\nhttp://testserver/baz/bar/issues/1/',
+            self.message_text,
         )
 
     @pytest.mark.skipif(sentry_version < V('8.20.0'), reason='sentry 8.9.0 message text equals to title')
@@ -79,7 +89,7 @@ class BaseTest(PluginTestCase):
         assert request.call_count == 1
         self.assert_notification_helper(
             request.call_args_list[0][1],
-            '*[Sentry]* Bar error: This is an example Python exception\nThis is an example Python exception raven.scripts.runner in main\nhttp://testserver/baz/bar/issues/1/',
+            self.message_text,
         )
 
     def test_get_empty_receivers_list(self):
