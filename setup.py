@@ -5,6 +5,10 @@ from setuptools import setup
 import sentry_telegram
 
 
+with open('README.rst', 'r') as f:
+    long_description = f.read()
+
+
 setup(
     name='sentry_telegram',
     version=sentry_telegram.__version__,
@@ -13,6 +17,8 @@ setup(
     author='Viacheslav Butorov',
     author_email='butorovv@gmail.com',
     description='Plugin for Sentry which allows sending notification via Telegram messenger.',
+    long_description=long_description,
+    long_description_content_type='text/x-rst',
     license='MIT',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
