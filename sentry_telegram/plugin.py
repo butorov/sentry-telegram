@@ -1,5 +1,6 @@
 # coding: utf-8
 import logging
+from collections import defaultdict
 
 from django import forms
 from django.utils.translation import ugettext_lazy as _
@@ -7,7 +8,6 @@ from django.utils.translation import ugettext_lazy as _
 from sentry.plugins.bases import notify
 from sentry.http import safe_urlopen
 from sentry.utils.safe import safe_execute
-from collections import defaultdict
 
 from . import __version__, __doc__ as package_doc
 
