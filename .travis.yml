@@ -7,19 +7,15 @@ install:
   - travis_retry pip install tox
 script: tox -e $TOX_ENV
 env:
-  - TOX_ENV=py27-sentry89
-  - TOX_ENV=py27-sentry810
-  - TOX_ENV=py27-sentry811
-  - TOX_ENV=py27-sentry812
-  - TOX_ENV=py27-sentry813
-  - TOX_ENV=py27-sentry814
-  - TOX_ENV=py27-sentry815
-  - TOX_ENV=py27-sentry816
-  - TOX_ENV=py27-sentry817
-  - TOX_ENV=py27-sentry818
-  - TOX_ENV=py27-sentry819
-  - TOX_ENV=py27-sentry820
   - TOX_ENV=py27-sentry821
   - TOX_ENV=py27-sentry822
+  - TOX_ENV=py27-sentry9
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+deploy:
+  provider: pypi
+  user: "Shmele"
+  password:
+    secure: "ED+56TlhSMxLgE7c4WTsgeLgiKhtlc4BMqNegj9Uym4HwXIapWQBkBO8ONIH01XwsQO7rwyLrHg2o+L7vW6YQrhh+fQerMxmNt2ZmfKaf8HwYvODXdJKdNxs6OA3dhBVCrn9tlK4g+KUsCw+T8Tgihk4Nlm+as/y1UMPQWhoDfep1RK1P0b0L+MLj7vQ0esaHS4aqxzpvoiuu7qGyOnCDGNfepYwVhpxxm9N6yVX9BxlaqWl4AjtD297llgwx/HZZ7QxVxyiJzNEBzLyvvl/AlHhjSlsblQ+mn8+PoYA5wQtneSzHqTI0nR7gxU8cziIdWglC7F5j7GD+Hoe9/Sa6hn06VyKb9slz8/GEDMfDaOwyrP96yOCWDe1mnWS32EDyijMK187lfYurdWHcVX2ShFxD005E1zylVjmcwIi2BD4WxdxuFLyaHwqOQ70fhM/O2d7PlrzB0/DOI9krC2IbalarBATLok2FIuuO4Pb00zfFHDPfKzw0F0+QtpsSaSJQ51ZgywUvBAHw42XMh9uxty8rOios+JsxlmqzLjFFDffsq+zuicp8g4T2fBBx/HMYrU7R4WhV2OQBurQvoU86ggE0udLkcO8NmVtlcEPNbg/sbUW2+bR+HVmeZ5fgQOuNYr2j/btqTuy+mOIDzxV2iuA801GCQ76KYaaQO8ThNg="
+  on:
+    tags: true
