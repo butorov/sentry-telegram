@@ -11,8 +11,8 @@ Presented plugin tested with Sentry from 8.9 to 9.0.
 How will it look like
 ---------------------
 
-.. image:: docs/images/telegram-window.png
-   :target: docs/images/telegram-window.png
+.. image:: https://raw.githubusercontent.com/butorov/sentry-telegram/master/docs/images/telegram-window.png
+   :target: https://github.com/butorov/sentry-telegram/blob/master/docs/images/telegram-window.png
    :alt: How will it look like
 
 Installation
