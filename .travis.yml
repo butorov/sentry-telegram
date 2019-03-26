@@ -17,5 +17,6 @@ deploy:
   user: "Shmele"
   password:
     secure: "C/RU+2Ug76r/9K/cpshW4x7CqouJS8MPo0vNzyXiVBABIgyndLCJLl9zWq+/lf4FnybqJijWTZb53emBYXSDqb5R1RZCknrhNS2Ei5FBiWselLHUsvB8yiC4o9O75CIwlUMzBOppT4wZ2ILJky9bMnB6VEVjFcbcFnHXCjOKMjwU+P2YscRATQPnpcptsat6UiStRx0z707HCR9r4dyUqhn7iKG5vYibrPwHOx6++Ba6T8BUHCdAyXwGi190CCEdNbu6lI/PbTvOCnBuqclxuOzrpsE0BXKy85QhGdRukohW1JMqluzdiAf2dLhQwVUgAHRZcUfIhq4yi9Dkfh64QcfRL4fAAiqm03e1rrQEcmSPjhby7tUu1iUzVkM/bO9FUCLyFGKtojbBEhECyXowZgdkD+WEuSebJTs2u+gGYVg4Ul1UfZ4lTr341O9uHoyJ5nUePHxHXWLy5hPaRZixkxdKd+y9CGJem5moKex5UMy/nMYyatWrHeLGNhmXvTzhT+NlWuBkANOihbbdaFQ7uKNvBvfy7BwWWBahHQyzb6YmD9tMCWXkOV7g7+42GWFm3M21JXjQ/j9lyLyAyIBWr04nF1r1qpAdJ6In/f1+K1uNCzkH9Y69wvpserLQqTXbd3Di3M/dWFLRO7S4jIV0P/gX2WCvEZQXkqf/Loy/m04="
+  skip_existing: true
   on:
     tags: true
