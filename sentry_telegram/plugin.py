@@ -13,6 +13,11 @@ from . import __version__, __doc__ as package_doc
 
 
 class TelegramNotificationsOptionsForm(notify.NotificationConfigurationForm):
+    api_origin = forms.CharField(
+        label=_('Telegram API origin'),
+        widget=forms.TextInput(attrs={'placeholder': 'https://api.telegram.org'}),
+        initial='https://api.telegram.org'
+    )
     api_token = forms.CharField(
         label=_('BotAPI token'),
         widget=forms.TextInput(attrs={'placeholder': '123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11'}),
@@ -56,6 +61,15 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
 
     def get_config(self, project, **kwargs):
         return [
+            {
+                'name': 'api_origin',
+                'label': 'Telegram API origin',
+                'type': 'text',
+                'placeholder': 'https://api.telegram.org',
+                'validators': [],
+                'required': True,
+                'default': 'https://api.telegram.org'
+            },
             {
                 'name': 'api_token',
                 'label': 'BotAPI token',
@@ -106,7 +120,7 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
         }
 
     def build_url(self, project):
-        return 'https://api.telegram.org/bot%s/sendMessage' % self.get_option('api_token', project)
+        return '%s/bot%s/sendMessage' % (self.get_option('api_origin', project), self.get_option('api_token', project))
 
     def get_message_template(self, project):
         return self.get_option('message_template', project)
