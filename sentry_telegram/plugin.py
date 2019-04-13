@@ -56,7 +56,7 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
     logger = logging.getLogger('sentry.plugins.sentry_telegram')
 
     def is_configured(self, project, **kwargs):
-        return bool(self.get_option('api_origin', project) and self.get_option('api_token', project) and self.get_option('receivers', project))
+        return bool(self.get_option('api_token', project) and self.get_option('receivers', project))
 
     def get_config(self, project, **kwargs):
         return [
@@ -117,7 +117,7 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
         }
 
     def build_url(self, project):
-        return '%s/bot%s/sendMessage' % (self.get_option('api_origin', project),self.get_option('api_token', project))
+        return '%s/bot%s/sendMessage' % (self.get_option('api_origin', project), self.get_option('api_token', project))
 
     def get_message_template(self, project):
         return self.get_option('message_template', project)
