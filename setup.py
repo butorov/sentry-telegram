@@ -2,7 +2,7 @@
 # coding: utf-8
 from setuptools import setup
 
-from sentry_telegram.info import __version__
+from sentry_telegram import __version__
 
 
 with open('README.rst', 'r') as f:
