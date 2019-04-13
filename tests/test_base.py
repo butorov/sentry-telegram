@@ -30,6 +30,7 @@ class BaseTest(PluginTestCase):
         assert plugins.get('sentry_telegram').slug == self.plugin.slug
 
     def send_notification_helper(self):
+        self.initialized_plugin.set_option('api_origin', 'https://api.telegram.org', self.project)
         self.initialized_plugin.set_option('receivers', '123', self.project)
         self.initialized_plugin.set_option('api_token', 'api:token', self.project)
         self.initialized_plugin.set_option(
