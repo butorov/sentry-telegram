@@ -8,7 +8,7 @@ except ImportError:
     settings = None
 
 
-__version__ = '0.2.1'
+__version__ = '0.2.2'
 
 
 if settings is not None and settings.configured:
