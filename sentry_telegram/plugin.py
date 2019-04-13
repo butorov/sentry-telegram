@@ -9,7 +9,8 @@ from sentry.plugins.bases import notify
 from sentry.http import safe_urlopen
 from sentry.utils.safe import safe_execute
 
-from . import __version__, __doc__ as package_doc
+from . import __doc__ as package_doc
+from .info import __version__
 
 
 class TelegramNotificationsOptionsForm(notify.NotificationConfigurationForm):
