@@ -2,7 +2,7 @@
 # coding: utf-8
 from setuptools import setup
 
-import sentry_telegram
+from sentry_telegram import __version__
 
 
 with open('README.rst', 'r') as f:
@@ -11,7 +11,7 @@ with open('README.rst', 'r') as f:
 
 setup(
     name='sentry_telegram',
-    version=sentry_telegram.__version__,
+    version=__version__,
     packages=['sentry_telegram'],
     url='https://github.com/butorov/sentry-telegram',
     author='Viacheslav Butorov',
