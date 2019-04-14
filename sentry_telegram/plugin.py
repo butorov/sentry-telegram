@@ -141,7 +141,7 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
         )
         self.logger.debug('Response code: %s, content: %s' % (response.status_code, response.content))
 
-    def notify_users(self, group, event, fail_silently=False):
+    def notify_users(self, group, event, fail_silently=False, **kwargs):
         self.logger.debug('Received notification for event: %s' % event)
         receivers = self.get_receivers(group.project)
         self.logger.debug('for receivers: %s' % ', '.join(receivers or ()))

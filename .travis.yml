@@ -10,6 +10,7 @@ env:
   - TOX_ENV=py27-sentry821
   - TOX_ENV=py27-sentry822
   - TOX_ENV=py27-sentry9
+  - TOX_ENV=py27-sentry91
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 deploy:
