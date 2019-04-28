@@ -20,6 +20,14 @@ setup(
     long_description=long_description,
     long_description_content_type='text/x-rst',
     license='MIT',
+    entry_points={
+        'sentry.apps': [
+            'sentry_telegram = sentry_telegram',
+        ],
+        'sentry.plugins': [
+            'sentry_telegram = sentry_telegram.plugin:TelegramNotificationsPlugin',
+        ],
+    },
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
