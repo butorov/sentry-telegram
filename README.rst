@@ -24,21 +24,14 @@ Installation
 
     pip install sentry-telegram
 
-2. Add plugin to ``INSTALLED_APPS`` of Sentry, into ``sentry.conf.py`` file. It's usually in the directory like ``/var/www/sentry/``.
-   For this purpose just add the following line into the file:
-
-.. code-block:: python
-
-    INSTALLED_APPS += ('sentry_telegram',)
-
-3. Restart your Sentry instance.
-4. Go to your Sentry web interface. Open ``Settings`` page of one of your projects.
-5. On ``Integrations`` page find ``Telegram Notifications`` plugin and enable it.
-6. Configure plugin on ``Configure plugin`` page.
+2. Restart your Sentry instance.
+3. Go to your Sentry web interface. Open ``Settings`` page of one of your projects.
+4. On ``Integrations`` (or ``Legacy Integrations``) page, find ``Telegram Notifications`` plugin and enable it.
+5. Configure plugin on ``Configure plugin`` page.
 
    See `Telegram's documentation <https://core.telegram.org/bots#3-how-do-i-create-a-bot>`_ to know how to create ``BotAPI Token``.
 
-7. Done!
+6. Done!
 
 .. |travis| image:: https://travis-ci.org/butorov/sentry-telegram.svg?branch=master
    :target: https://travis-ci.org/butorov/sentry-telegram

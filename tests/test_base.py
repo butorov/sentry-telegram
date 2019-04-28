@@ -10,7 +10,7 @@ from sentry.testutils import PluginTestCase
 from sentry.utils.samples import create_sample_event
 
 
-from sentry_telegram import TelegramNotificationsPlugin
+from sentry_telegram.plugin import TelegramNotificationsPlugin
 
 
 sentry_version = V(sentry.__version__)
