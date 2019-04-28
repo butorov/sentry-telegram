@@ -21,9 +21,6 @@ setup(
     long_description_content_type='text/x-rst',
     license='MIT',
     entry_points={
-        'sentry.apps': [
-            'sentry_telegram = sentry_telegram',
-        ],
         'sentry.plugins': [
             'sentry_telegram = sentry_telegram.plugin:TelegramNotificationsPlugin',
         ],
