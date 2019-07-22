@@ -6,6 +6,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from sentry.plugins.bases import notify
+from sentry_plugins.base import CorePluginMixin
 from sentry.http import safe_urlopen, SafeSession
 from sentry.utils.safe import safe_execute
 
@@ -41,7 +42,7 @@ class TelegramNotificationsOptionsForm(notify.NotificationConfigurationForm):
     )
 
 
-class TelegramNotificationsPlugin(notify.NotificationPlugin):
+class TelegramNotificationsPlugin(CorePluginMixin, notify.NotificationPlugin):
     title = 'Telegram Notifications'
     slug = 'sentry_telegram'
     description = package_doc
@@ -182,15 +183,22 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
 
         self.logger.debug('Response code: %s, content: %s' % (response.status_code, response.content))
 
-    def notify_users(self, group, event, fail_silently=False, **kwargs):
+    def notify(self, notification):
+        event = notification.event
+        group = event.group
+        project = group.project
+
+        if not self.is_configured(project):
+            return
+
         self.logger.debug('Received notification for event: %s' % event)
-        receivers = self.get_receivers(group.project)
+        receivers = self.get_receivers(project)
         self.logger.debug('for receivers: %s' % ', '.join(receivers or ()))
         payload = self.build_message(group, event)
         self.logger.debug('Built payload: %s' % payload)
-        url = self.build_url(group.project)
+        url = self.build_url(project)
         self.logger.debug('Built url: %s' % url)
-        proxy = self.get_option('proxy', group.project)
+        proxy = self.get_option('proxy', project)
         self.logger.debug('Proxy url: %s', proxy)
         for receiver in receivers:
             if not proxy :
