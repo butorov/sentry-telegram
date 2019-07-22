@@ -10,6 +10,8 @@ from sentry_plugins.base import CorePluginMixin
 from sentry.http import safe_urlopen, SafeSession
 from sentry.utils.safe import safe_execute
 
+from markdown_strings import esc_format
+
 from . import __version__, __doc__ as package_doc
 
 
@@ -114,13 +116,13 @@ class TelegramNotificationsPlugin(CorePluginMixin, notify.NotificationPlugin):
 
     def build_message(self, group, event):
         the_tags = defaultdict(lambda: '[NA]')
-        the_tags.update({k:v for k, v in event.tags})
+        the_tags.update({k:esc_format(v) for k, v in event.tags})
         names = {
-            'title': event.title,
+            'title': esc_format(event.title),
             'tag': the_tags,
-            'message': event.message,
-            'project_name': group.project.name,
-            'url': group.get_absolute_url(),
+            'message': esc_format(event.message),
+            'project_name': esc_format(group.project.name),
+            'url': esc_format(group.get_absolute_url()),
         }
 
         template = self.get_message_template(group.project)
