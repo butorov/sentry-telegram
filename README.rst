@@ -24,14 +24,30 @@ Installation
 
     pip install sentry-telegram
 
-2. Restart your Sentry instance.
-3. Go to your Sentry web interface. Open ``Settings`` page of one of your projects.
-4. On ``Integrations`` (or ``Legacy Integrations``) page, find ``Telegram Notifications`` plugin and enable it.
-5. Configure plugin on ``Configure plugin`` page.
+2. Go to your Sentry root/sentry/
+3. Open requirements.txt and include new plugin in it
+
+.. code-block:: bash
+
+    # Add plugins here
+    sentry-telegram
+
+4. Set cd to your Sentry root in console, write this to rebuild your docker
+
+.. code-block:: bash
+
+    docker-compose down
+    docker-compose up -d --build
+    
+    
+5. Go to your Sentry web interface. Open ``Settings`` page of one of your projects.
+6. On ``Integrations`` (or ``Legacy Integrations``) page, find ``Telegram Notifications`` plugin and enable it.
+7. Configure plugin on ``Configure plugin`` page.
 
    See `Telegram's documentation <https://core.telegram.org/bots#3-how-do-i-create-a-bot>`_ to know how to create ``BotAPI Token``.
 
-6. Done!
+8. Don't forget to specify Alerts rules for errors in your project settings, in web panel.
+9. Done!
 
 .. |travis| image:: https://travis-ci.org/butorov/sentry-telegram.svg?branch=master
    :target: https://travis-ci.org/butorov/sentry-telegram
