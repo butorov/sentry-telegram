@@ -129,11 +129,11 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
         receivers = self.get_option('receivers', project)
         if not receivers:
             return []
-        return filter(bool, receivers.strip().splitlines())
+        return list(filter(bool, receivers.strip().splitlines()))
 
     def send_message(self, url, payload, receiver):
         payload['chat_id'] = receiver
-        self.logger.debug('Sending message to %s ' % receiver)
+        self.logger.info('Sending message to %s ' % receiver)
         response = safe_urlopen(
             method='POST',
             url=url,
