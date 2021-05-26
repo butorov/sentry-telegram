@@ -102,18 +102,30 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
     def build_message(self, group, event):
         the_tags = defaultdict(lambda: '[NA]')
         the_tags.update({k: v for k, v in event.tags})
-        names = {
-            'title': event.title,
-            'tag': the_tags,
-            'message': event.message,
-            'project_name': group.project.name,
-            'url': group.get_absolute_url(),
-        }
 
+        telegram_max_message_length = 4000
         template = self.get_message_template(group.project)
+        message = event.message
+        truncated = False
 
-        text = template.format(**names)
-        text = text[:4000]  # telegram max message length
+        while True:
+            names = {
+                'title': event.title[:500],
+                'tag': the_tags,
+                'message': message,
+                'project_name': group.project.name,
+                'url': group.get_absolute_url(),
+            }
+            text = template.format(**names)
+            text_full_size = len(text)
+
+            if truncated or text_full_size <= telegram_max_message_length:
+                break
+            else:
+                truncate_warning = "... (truncated)"
+                truncate_size = (text_full_size - telegram_max_message_length) + len(truncate_warning)
+                message = event.message[:-truncate_size] + truncate_warning
+                truncated = True
 
         return {
             'text': text,
