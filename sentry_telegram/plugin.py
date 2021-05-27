@@ -153,7 +153,7 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
             json=payload,
         )
         self.logger.debug('Response code: %s, content: %s' % (response.status_code, response.content))
-        if response.status_code != 200:
+        if response.status_code > 299:
             raise ConnectionError(response.content)
 
     def notify_users(self, group, event, fail_silently=False, **kwargs):
