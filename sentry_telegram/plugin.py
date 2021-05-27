@@ -92,7 +92,7 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
                 'label': 'Message Template',
                 'type': 'textarea',
                 'help': 'Set in standard python\'s {}-format convention, available names are: '
-                        '{project_name}, {url}, {title}, {message}, {tag[%your_tag%]}. Undefined tags will be shown as [NA]',
+                    '{project_name}, {url}, {title}, {message}, {tag[%your_tag%]}. Undefined tags will be shown as [NA]',
                 'validators': [],
                 'required': True,
                 'default': '*[Sentry]* {project_name} {tag[level]}: *{title}*\n```{message}```\n{url}'
