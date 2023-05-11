@@ -28,6 +28,12 @@ class TelegramNotificationsOptionsForm(notify.NotificationConfigurationForm):
         widget=forms.Textarea(attrs={'class': 'span6'}),
         help_text=_('Enter receivers IDs (one per line). Personal messages, group chats and channels also available.'))
 
+    receiver_threads = forms.CharField(
+        label=_('Receivers threads'),
+        widget=forms.TextInput(attrs={'placeholder': '123'}),
+        help_text=_('Enter thred IDs (optional)'),
+    )
+
     message_template = forms.CharField(
         label=_('Message template'),
         widget=forms.Textarea(attrs={'class': 'span4'}),
@@ -88,6 +94,14 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
                 'required': True,
             },
             {
+                'name': 'receiver_threads',
+                'label': 'Receivers threads',
+                'type': 'text',
+                'help': 'Enter receivers thread IDs (optional).',
+                'validators': [],
+                'required': False,
+            },
+            {
                 'name': 'message_template',
                 'label': 'Message Template',
                 'type': 'textarea',
@@ -131,9 +145,19 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
             return []
         return list([line.strip() for line in receivers.strip().splitlines() if line.strip()])
 
-    def send_message(self, url, payload, receiver):
+    def get_receiver_threads(self, project):
+        receiver_threads = self.get_option('receiver_threads', project)
+        if not receiver_threads:
+            return []
+        return filter(bool, receiver_threads.strip().splitlines())
+
+    def send_message(self, url, payload, receiver, receiver_thread):
         payload['chat_id'] = receiver
         self.logger.debug('Sending message to %s' % receiver)
+        if receiver_thread:
+          payload['message_thread_id'] = receiver_thread
+          self.logger.debug('Sending message to thread %s ' % receiver_thread)
+
         response = safe_urlopen(
             method='POST',
             url=url,
@@ -145,9 +169,12 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
         self.logger.debug('Received notification for event: %s' % event)
         receivers = self.get_receivers(group.project)
         self.logger.debug('for receivers: %s' % ', '.join(receivers or ()))
+        receiver_threads = self.get_receiver_threads(group.project)
+        self.logger.debug('for receiver_threads: %s' % ', '.join(receiver_threads or ()))
         payload = self.build_message(group, event)
         self.logger.debug('Built payload: %s' % payload)
         url = self.build_url(group.project)
         self.logger.debug('Built url: %s' % url)
-        for receiver in receivers:
-            safe_execute(self.send_message, url, payload, receiver, _with_transaction=False)
+        for index, receiver in enumerate(receivers):
+            receiver_thread = receiver_threads[index]
+            safe_execute(self.send_message, url, payload, receiver, receiver_thread, _with_transaction=False)
