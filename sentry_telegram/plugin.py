@@ -33,7 +33,7 @@ class TelegramNotificationsOptionsForm(notify.NotificationConfigurationForm):
         widget=forms.Textarea(attrs={'class': 'span4'}),
         help_text=_('Set in standard python\'s {}-format convention, available names are: '
                     '{project_name}, {url}, {title}, {message}, {tag[%your_tag%]}'),
-        initial='*[Sentry]* {project_name} {tag[level]}: *{title}*\n```{message}```\n{url}'
+        initial='*[Sentry]* {project_name} {tag[level]}: *{title}*\n```\n{message}```\n{url}'
     )
 
 
