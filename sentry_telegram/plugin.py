@@ -1,4 +1,3 @@
-# coding: utf-8
 import logging
 from collections import defaultdict
 
@@ -120,34 +119,38 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
         }
 
     def build_url(self, project):
-        return '%s/bot%s/sendMessage' % (self.get_option('api_origin', project), self.get_option('api_token', project))
+        return f'{self.get_option("api_origin", project)}/bot{self.get_option("api_token", project)}/sendMessage'
 
     def get_message_template(self, project):
         return self.get_option('message_template', project)
 
-    def get_receivers(self, project):
+    def get_receivers(self, project) -> list:
         receivers = self.get_option('receivers', project)
         if not receivers:
             return []
-        return filter(bool, receivers.strip().splitlines())
+        return list([line.strip() for line in receivers.strip().splitlines() if line.strip()])
 
     def send_message(self, url, payload, receiver):
         payload['chat_id'] = receiver
-        self.logger.debug('Sending message to %s ' % receiver)
+        self.logger.debug(f'Sending message to {receiver}')
         response = safe_urlopen(
             method='POST',
             url=url,
             json=payload,
         )
-        self.logger.debug('Response code: %s, content: %s' % (response.status_code, response.content))
+        self.logger.debug(f'Response code: {response.status_code}, content: {response.content}')
 
-    def notify_users(self, group, event, fail_silently=False, **kwargs):
-        self.logger.debug('Received notification for event: %s' % event)
+    def notify_users(self, group, event, triggering_rules, fail_silently=False, **kwargs):
+        # Most of built-in plugins have this check:
+        if not self.is_configured(group.project):
+            return
+
+        self.logger.debug(f'Received notification for event: {event}')
         receivers = self.get_receivers(group.project)
-        self.logger.debug('for receivers: %s' % ', '.join(receivers or ()))
+        self.logger.debug(f'for receivers: {", ".join(receivers or ())}')
         payload = self.build_message(group, event)
-        self.logger.debug('Built payload: %s' % payload)
+        self.logger.debug(f'Built payload: {payload}')
         url = self.build_url(group.project)
-        self.logger.debug('Built url: %s' % url)
+        self.logger.debug(f'Built url: {url}')
         for receiver in receivers:
             safe_execute(self.send_message, url, payload, receiver, _with_transaction=False)
