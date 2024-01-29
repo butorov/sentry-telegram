@@ -1,16 +1,21 @@
 services:
   - redis-server
+jobs:
+  include:
+    - python: "2.7"
+      env: TOX_ENV=py27-sentry821
+    - python: "2.7"
+      env: TOX_ENV=py27-sentry822
+    - python: "2.7"
+      env: TOX_ENV=py27-sentry9
+    - python: "2.7"
+      env: TOX_ENV=py27-sentry91
+    - python: "3.6"
+      env: TOX_ENV=py36-sentry2012
 language: python
-python:
-  - "2.7"
 install:
   - travis_retry pip install tox
 script: tox -e $TOX_ENV
-env:
-  - TOX_ENV=py27-sentry821
-  - TOX_ENV=py27-sentry822
-  - TOX_ENV=py27-sentry9
-  - TOX_ENV=py27-sentry91
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 deploy:
