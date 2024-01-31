@@ -12,6 +12,10 @@ from sentry.utils.safe import safe_execute
 from . import __version__, __doc__ as package_doc
 
 
+TELEGRAM_MAX_MESSAGE_LENGTH = 4096  # https://core.telegram.org/bots/api#sendmessage:~:text=be%20sent%2C%201%2D-,4096,-characters%20after%20entities
+EVENT_TITLE_MAX_LENGTH = 500
+
+
 class TelegramNotificationsOptionsForm(notify.NotificationConfigurationForm):
     api_origin = forms.CharField(
         label=_('Telegram API origin'),
@@ -92,40 +96,51 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
                 'label': 'Message Template',
                 'type': 'textarea',
                 'help': 'Set in standard python\'s {}-format convention, available names are: '
-                    '{project_name}, {url}, {title}, {message}, {tag[%your_tag%]}. Undefined tags will be shown as [NA]',
+                        '{project_name}, {url}, {title}, {message}, {tag[%your_tag%]}. Undefined tags will be shown as [NA]',
                 'validators': [],
                 'required': True,
                 'default': '*[Sentry]* {project_name} {tag[level]}: *{title}*\n```{message}```\n{url}'
             },
         ]
 
-    def build_message(self, group, event):
-        the_tags = defaultdict(lambda: '[NA]')
-        the_tags.update({k: v for k, v in event.tags})
+    def compile_message_text(self, message_template: str, message_params: dict, event_message: str) -> str:
+        """
+        Compiles message text from template and event message.
+        Truncates the original event message (`event.message`) to fit Telegram message length limit.
+        """
+        # TODO: add tests
+        truncate_warning_text = '... (truncated)'
+        truncate_warning_length = len(truncate_warning_text)
 
-        telegram_max_message_length = 4000
-        template = self.get_message_template(group.project)
-        message = event.message
         truncated = False
-
         while True:
-            names = {
-                'title': event.title[:500],
-                'tag': the_tags,
-                'message': message,
-                'project_name': group.project.name,
-                'url': group.get_absolute_url(),
-            }
-            text = template.format(**names)
-            text_full_size = len(text)
+            message_text = message_template.format(**message_params, message=event_message)
+            message_text_size = len(message_text)
 
-            if truncated or text_full_size <= telegram_max_message_length:
+            if truncated or message_text_size <= TELEGRAM_MAX_MESSAGE_LENGTH:
                 break
             else:
-                truncate_warning = "... (truncated)"
-                truncate_size = (text_full_size - telegram_max_message_length) + len(truncate_warning)
-                message = event.message[:-truncate_size] + truncate_warning
+                truncate_size = (message_text_size - TELEGRAM_MAX_MESSAGE_LENGTH) + truncate_warning_length
+                event_message = event_message[:-truncate_size] + truncate_warning_text
                 truncated = True
+
+        return message_text
+
+    def build_message(self, group, event):
+        event_tags = defaultdict(lambda: '[NA]')
+        event_tags.update({k: v for k, v in event.tags})
+
+        message_params = {
+            'title': event.title[:EVENT_TITLE_MAX_LENGTH],
+            'tag': event_tags,
+            'project_name': group.project.name,
+            'url': group.get_absolute_url(),
+        }
+        text = self.compile_message_text(
+            self.get_message_template(group.project),
+            message_params,
+            event.message,
+        )
 
         return {
             'text': text,
