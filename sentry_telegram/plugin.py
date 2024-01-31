@@ -6,8 +6,11 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from sentry.plugins.bases import notify
-from sentry.http import safe_urlopen
+from sentry_plugins.base import CorePluginMixin
+from sentry.http import safe_urlopen, SafeSession
 from sentry.utils.safe import safe_execute
+
+from markdown_strings import esc_format
 
 from . import __version__, __doc__ as package_doc
 
@@ -23,6 +26,10 @@ class TelegramNotificationsOptionsForm(notify.NotificationConfigurationForm):
         widget=forms.TextInput(attrs={'placeholder': '123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11'}),
         help_text=_('Read more: https://core.telegram.org/bots/api#authorizing-your-bot'),
     )
+    proxy = forms.CharField(
+        label=_('Proxy URL'),
+        widget=forms.TextInput(attrs={'placeholder': 'socks5://username:password@example.org:8080'})
+    )
     receivers = forms.CharField(
         label=_('Receivers'),
         widget=forms.Textarea(attrs={'class': 'span6'}),
@@ -37,7 +44,7 @@ class TelegramNotificationsOptionsForm(notify.NotificationConfigurationForm):
     )
 
 
-class TelegramNotificationsPlugin(notify.NotificationPlugin):
+class TelegramNotificationsPlugin(CorePluginMixin, notify.NotificationPlugin):
     title = 'Telegram Notifications'
     slug = 'sentry_telegram'
     description = package_doc
@@ -80,6 +87,14 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
                 'required': True,
             },
             {
+                'name': 'proxy',
+                'label': 'Proxy URL',
+                'type': 'text',
+                'placeholder': 'socks5://username:password@example.org:8080',
+                'validators': [],
+                'required': False,
+            },
+            {
                 'name': 'receivers',
                 'label': 'Receivers',
                 'type': 'textarea',
@@ -101,13 +116,13 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
 
     def build_message(self, group, event):
         the_tags = defaultdict(lambda: '[NA]')
-        the_tags.update({k:v for k, v in event.tags})
+        the_tags.update({k:esc_format(v) for k, v in event.tags})
         names = {
-            'title': event.title,
+            'title': esc_format(event.title),
             'tag': the_tags,
-            'message': event.message,
-            'project_name': group.project.name,
-            'url': group.get_absolute_url(),
+            'message': esc_format(event.message),
+            'project_name': esc_format(group.project.name),
+            'url': esc_format(group.get_absolute_url()),
         }
 
         template = self.get_message_template(group.project)
@@ -141,13 +156,54 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
         )
         self.logger.debug('Response code: %s, content: %s' % (response.status_code, response.content))
 
-    def notify_users(self, group, event, fail_silently=False, **kwargs):
+    def send_message_via_proxy(self, url, payload, receiver, proxy):
+        payload['chat_id'] = receiver
+        self.logger.debug('Sending message to %s ' % receiver)
+
+        # safe_urlopen has no proxies option yet
+        # below is same as safe_urlopen, but wrote manually (and with proxies)
+
+        headers = {}
+        headers.setdefault('Content-Type', 'application/json')
+
+        proxies = {
+            'http': proxy,
+            'https': proxy
+        }
+
+        session = SafeSession()
+        response = session.request(
+            method='POST',
+            url=url,
+            allow_redirects=False,
+            timeout=30,
+            verify=True,
+            json=payload,
+            headers=headers,
+            proxies=proxies
+        )
+
+        self.logger.debug('Response code: %s, content: %s' % (response.status_code, response.content))
+
+    def notify(self, notification):
+        event = notification.event
+        group = event.group
+        project = group.project
+
+        if not self.is_configured(project):
+            return
+
         self.logger.debug('Received notification for event: %s' % event)
-        receivers = self.get_receivers(group.project)
+        receivers = self.get_receivers(project)
         self.logger.debug('for receivers: %s' % ', '.join(receivers or ()))
         payload = self.build_message(group, event)
         self.logger.debug('Built payload: %s' % payload)
-        url = self.build_url(group.project)
+        url = self.build_url(project)
         self.logger.debug('Built url: %s' % url)
+        proxy = self.get_option('proxy', project)
+        self.logger.debug('Proxy url: %s', proxy)
         for receiver in receivers:
-            safe_execute(self.send_message, url, payload, receiver, _with_transaction=False)
+            if not proxy :
+                safe_execute(self.send_message, url, payload, receiver, _with_transaction=False)
+            else:
+                safe_execute(self.send_message_via_proxy, url, payload, receiver, proxy, _with_transaction=False)
