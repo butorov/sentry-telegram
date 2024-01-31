@@ -37,7 +37,7 @@ class TelegramNotificationsOptionsForm(notify.NotificationConfigurationForm):
         widget=forms.Textarea(attrs={'class': 'span4'}),
         help_text=_('Set in standard python\'s {}-format convention, available names are: '
                     '{project_name}, {url}, {title}, {message}, {tag[%your_tag%]}'),
-        initial='*[Sentry]* {project_name} {tag[level]}: *{title}*\n```{message}```\n{url}'
+        initial='*[Sentry]* {project_name} {tag[level]}: *{title}*\n```\n{message}```\n{url}'
     )
 
 
@@ -157,11 +157,11 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
         receivers = self.get_option('receivers', project)
         if not receivers:
             return []
-        return list(filter(bool, receivers.strip().splitlines()))
+        return list([line.strip() for line in receivers.strip().splitlines() if line.strip()])
 
     def send_message(self, url, payload, receiver):
         payload['chat_id'] = receiver
-        self.logger.debug('Sending message to %s ' % receiver)
+        self.logger.debug('Sending message to %s' % receiver)
         response = safe_urlopen(
             method='POST',
             url=url,
