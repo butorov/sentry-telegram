@@ -83,7 +83,7 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
                 'name': 'receivers',
                 'label': 'Receivers',
                 'type': 'textarea',
-                'help': 'Enter receivers IDs (one per line). Personal messages, group chats and channels also available.',
+                'help': 'Enter receivers IDs (one per line). Personal messages, group chats and channels also available. If you want to specify a thread ID, separate it with /',
                 'validators': [],
                 'required': True,
             },
@@ -131,9 +131,13 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
             return []
         return list([line.strip() for line in receivers.strip().splitlines() if line.strip()])
 
-    def send_message(self, url, payload, receiver):
+    def send_message(self, url, payload, receiver, receiver_thread=None):
         payload['chat_id'] = receiver
         self.logger.debug('Sending message to %s' % receiver)
+        if receiver_thread is not None:
+            payload['message_thread_id'] = receiver_thread
+            self.logger.debug('Sending message to thread %s' % receiver_thread)
+
         response = safe_urlopen(
             method='POST',
             url=url,
@@ -149,5 +153,10 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
         self.logger.debug('Built payload: %s' % payload)
         url = self.build_url(group.project)
         self.logger.debug('Built url: %s' % url)
-        for receiver in receivers:
-            safe_execute(self.send_message, url, payload, receiver, _with_transaction=False)
+        for receiver_line in receivers:
+            receiver_array = receiver_line.replace(' ', '').split('/')
+            receiver = receiver_array.pop(0)
+            receiver_thread = None
+            if receiver_array:
+                receiver_thread = receiver_array.pop(0)
+            safe_execute(self.send_message, url, payload, receiver, receiver_thread, _with_transaction=False)
