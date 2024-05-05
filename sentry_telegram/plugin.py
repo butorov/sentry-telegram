@@ -32,7 +32,7 @@ class TelegramNotificationsOptionsForm(notify.NotificationConfigurationForm):
         widget=forms.Textarea(attrs={'class': 'span6'}),
         help_text=_('Enter receivers IDs (one per line). Personal messages, group chats and channels also available. '
                     'If you want to specify a thread ID, separate it with "/" (e.g. "12345/12").'),
-
+    )
     message_template = forms.CharField(
         label=_('Message template'),
         widget=forms.Textarea(attrs={'class': 'span4'}),
