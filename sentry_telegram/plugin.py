@@ -30,7 +30,8 @@ class TelegramNotificationsOptionsForm(notify.NotificationConfigurationForm):
     receivers = forms.CharField(
         label=_('Receivers'),
         widget=forms.Textarea(attrs={'class': 'span6'}),
-        help_text=_('Enter receivers IDs (one per line). Personal messages, group chats and channels also available.'))
+        help_text=_('Enter receivers IDs (one per line). Personal messages, group chats and channels also available. '
+                    'If you want to specify a thread ID, separate it with "/" (e.g. "12345/12").'),
 
     message_template = forms.CharField(
         label=_('Message template'),
@@ -87,7 +88,8 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
                 'name': 'receivers',
                 'label': 'Receivers',
                 'type': 'textarea',
-                'help': 'Enter receivers IDs (one per line). Personal messages, group chats and channels also available.',
+                'help': 'Enter receivers IDs (one per line). Personal messages, group chats and channels also available. '
+                        'If you want to specify a thread ID, separate it with "/" (e.g. "12345/12").',
                 'validators': [],
                 'required': True,
             },
@@ -153,14 +155,16 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
     def get_message_template(self, project):
         return self.get_option('message_template', project)
 
-    def get_receivers(self, project):
-        receivers = self.get_option('receivers', project)
+    def get_receivers(self, project) -> list[list[str, str]]:
+        receivers = self.get_option('receivers', project).strip()
         if not receivers:
             return []
-        return list([line.strip() for line in receivers.strip().splitlines() if line.strip()])
+        return list([line.strip().split('/', maxsplit=1) for line in receivers.splitlines() if line.strip()])
 
-    def send_message(self, url, payload, receiver):
-        payload['chat_id'] = receiver
+    def send_message(self, url, payload, receiver: list[str, str]):
+        payload['chat_id'] = receiver[0]
+        if len(receiver) > 1:
+            payload['reply_to_message_id'] = receiver[1]
         self.logger.debug('Sending message to %s' % receiver)
         response = safe_urlopen(
             method='POST',
