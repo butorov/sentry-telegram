@@ -178,7 +178,7 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
     def notify_users(self, group, event, fail_silently=False, **kwargs):
         self.logger.debug('Received notification for event: %s' % event)
         receivers = self.get_receivers(group.project)
-        self.logger.debug('for receivers: %s' % ', '.join(receivers or ()))
+        self.logger.debug('for receivers: %s' % ', '.join(['/'.join(item) for item in receivers] or ()))
         payload = self.build_message(group, event)
         self.logger.debug('Built payload: %s' % payload)
         url = self.build_url(group.project)
