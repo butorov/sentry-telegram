@@ -164,7 +164,7 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
     def send_message(self, url, payload, receiver: list[str, str]):
         payload['chat_id'] = receiver[0]
         if len(receiver) > 1:
-            payload['reply_to_message_id'] = receiver[1]
+            payload['message_thread_id'] = receiver[1]
         self.logger.debug('Sending message to %s' % receiver)
         response = safe_urlopen(
             method='POST',
