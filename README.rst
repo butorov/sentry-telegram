@@ -3,7 +3,7 @@ Sentry Telegram |travis| |codecov| |pypi|
 
 Plugin for Sentry which allows sending notification via `Telegram <https://telegram.org/>`_ messenger.
 
-Presented plugin tested with Sentry from 8.9 to 9.1.1.
+Presented plugin tested with Sentry 24.4.2.
 
     **DISCLAIMER**: Sentry API is under development and `is not frozen <https://docs.sentry.io/server/plugins/>`_.
 
