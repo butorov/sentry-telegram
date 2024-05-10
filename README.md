@@ -1,12 +1,12 @@
 # Sentry Telegram ![Build Status](https://travis-ci.org/butorov/sentry-telegram.svg?branch=master) ![Coverage Status](https://codecov.io/gh/butorov/sentry-telegram/branch/master/graph/badge.svg) ![PyPI](https://badge.fury.io/py/sentry-telegram.svg) ![PyPI - Downloads](https://img.shields.io/pypi/dm/sentry-telegram)
 
-Plugin for Sentry which allows sending notifications via [Telegram](https://telegram.org/) messenger.
+Plugin for Sentry which allows sending notifications via the [Telegram](https://telegram.org/) messenger.
 
 As any plugins installation is only available for [self-hosted Sentry](https://github.com/getsentry/self-hosted) instances, this plugin is unavailable for cloud-hosted [Sentry](https://sentry.io/).
 
 Presented plugin tested with Sentry 24.4.x.
 
-# How will it look like
+# How will it look
 
 ![How will it look like](/docs/images/telegram-window.png)
 
@@ -18,16 +18,16 @@ Presented plugin tested with Sentry 24.4.x.
 
 Table of compatibility:
 
-| Plugin version | Sentry versions | Tested in Sentry versions                           |
-|----------------|-----------------|-----------------------------------------------------|
-| 0.5.0          | 24.4.x          | 24.4.1, 24.4.2                                      |
-| 0.4.0          | 8.x to 9.1.1    | 8.9, 9.1.1                                          |
-| 0.3.0          | 8.x to 9.x      | 8.21, 8.22, 9.0.0, 9.1.0                            |
-| 0.2.2          | 8.x to 9.x      | 8.21, 8.22, 9.0.0                                   |
-| 0.2.1          | 8.x to 9.x      | 8.21, 8.22, 9.0.0                                   |
-| 0.2.0          | 8.x             | 8.9, 8.10, 8.11, 8.12, 8.13, 8.14, 8.15, 8.16, 8.17 |
-| 0.1.2          | 8.x             | 8.9.0, 8.12.0                                       |
-| 0.1.1          | 8.x             | 8.9.0                                               |
+| Plugin version | Compatible Sentry versions | Tested in Sentry versions                           |
+|----------------|----------------------------|-----------------------------------------------------|
+| 0.5.0          | 24.4.x                     | 24.4.1, 24.4.2                                      |
+| 0.4.0          | 8.x to 9.x                 | 8.9, 9.1.1                                          |
+| 0.3.0          | 8.x to 9.x                 | 8.21, 8.22, 9.0.0, 9.1.0                            |
+| 0.2.2          | 8.x to 9.x                 | 8.21, 8.22, 9.0.0                                   |
+| 0.2.1          | 8.x to 9.x                 | 8.21, 8.22, 9.0.0                                   |
+| 0.2.0          | 8.x                        | 8.9, 8.10, 8.11, 8.12, 8.13, 8.14, 8.15, 8.16, 8.17 |
+| 0.1.2          | 8.x                        | 8.9.0, 8.12.0                                       |
+| 0.1.1          | 8.x                        | 8.9.0                                               |
 
 
 # Installation
@@ -73,11 +73,11 @@ Table of compatibility:
 4. After the script finishes, you can start the Sentry instance, or if it was already running, restart it.
    - For the first start, you need to run the following command:
      ```bash
-     docker-compose up -d
+     docker compose up -d
      ```
    - If the Sentry instance was already running, it's enough to restart several services:
      ```bash
-     docker-compose restart web worker cron sentry-cleanup
+     docker compose restart web worker cron sentry-cleanup
      ```
 
 # Configuration
@@ -86,16 +86,16 @@ Table of compatibility:
 
 ### From the Organization Settings
 
-1. Go to your Sentry web interface. Open Settings page, that located in the left sidebar (<your-sentry-installation-url>/settings/sentry/).
-2. In the "Organization" section of the second sidebar, go to the "Integrations" page (<your-sentry-installation-url>/settings/sentry/integrations/).
+1. Go to your Sentry web interface. Open Settings page, that located in the left sidebar (`<your-sentry-installation-url>/settings/sentry/`).
+2. In the "Organization" section of the second sidebar, go to the "Integrations" page (`<your-sentry-installation-url>/settings/sentry/integrations/`).
 3. Find the "Telegram Notifications" plugin in the list of integrations and click on it.
 4. Press the "Add to Project" button. You will be prompted to select a project to which you want to add the plugin (unless you have only one project).
 5. You will be redirected to the plugin configuration page for the selected project.
 
 ### From the Project Settings
 
-1. Go to your Sentry web interface. Open the Settings page of one of your projects (<your-sentry-installation-url>/settings/sentry/projects/<project-name>/).
-2. In the second sidebar, go to the "Legacy Integrations" section (<your-sentry-installation-url>/settings/sentry/projects/<project-name>/plugins/).
+1. Go to your Sentry web interface. Open the Settings page of one of your projects (`<your-sentry-installation-url>/settings/sentry/projects/<project-name>/`).
+2. In the second sidebar, go to the "Legacy Integrations" section (`<your-sentry-installation-url>/settings/sentry/projects/<project-name>/plugins/`).
 3. Find the "Telegram Notifications" plugin in the list of integrations and select the "Configure plugin" link at the bottom of the plugin card.
 4. Press the "Enable Plugin" button.
 
@@ -107,14 +107,14 @@ Table of compatibility:
 2. After you have created a bot, copy the Bot API token and paste it into the "Bot API token" field on the plugin configuration page.
 3. In the Receivers field, you need to specify the list of Telegram users and/or groups that will receive notifications.
    You can specify multiple receivers, each on a new line. You can use user/chat IDs, **but not usernames**.
-   - to obtain the user ID, use can use one of the bots that can provide you with your user ID.
+   - To obtain the user ID, use can use one of the bots that can provide you with your user ID.
      For example, [this one](https://t.me/getmyid_bot) or [this one](https://t.me/raw_data_bot) (I don't have any relation to these bots) or any other, which you trust.
      Of course, you can use your own Bot API token to obtain the user ID.
-   - to obtain the chat ID the easies way is to use "Share" button in the Telegram and get the chat ID from the link.
+   - To obtain the chat ID the easies way is to use "Share" button in the Telegram app and get the chat ID from the link.
      For example, if you share the chat with yourself, you will get the link like `https://t.me/c/123456789`.
      The chat ID in this case is `-123456789`.
      According to the Telegram Bot API requirements, you need to specify the chat ID with the minus sign (`-`) at the beginning.
-   - if you have a chat with Topics, you can get the chat ID from the link as well. You need to share the particular Topic.
+   - If you have a chat with Topics, you can get the chat ID from the link as well. You need to share the particular Topic.
      For example, if you got a link `https://t.me/c/123456789/5`, the chat ID is `123456789` and the Topic ID is `5`.
      The receiver in this case will be `-123456789/5`.
    - Don't forget that all the receivers should allow the bot to send messages to them. 
