@@ -6,9 +6,21 @@ As any plugins installation is only available for [self-hosted Sentry](https://g
 
 Presented plugin tested with Sentry 24.4.x.
 
+# Features
+
+- Sending notifications about issues to one or many Telegram users and/or groups.
+- Sending notifications to particular threads (Topics) in chats.
+- Customizable message template with placeholders for the project name, issue URL, title, error message, and tags.
+- Support for Markdown formatting in the message template.
+- Proxy support (through `origin_url` parameter in the configuration, see [#20](https://github.com/butorov/sentry-telegram/issues/20#issuecomment-483024745)).
+
 # How will it look
 
-![How will it look like](/docs/images/telegram-window.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="/docs/images/telegram-window-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="/docs/images/telegram-window-light.png">
+  <img alt="How will it look like" src="/docs/images/telegram-window-light.png">
+</picture>
 
 # Compatible versions
 
@@ -122,10 +134,10 @@ Table of compatibility:
      - For groups, the bot should be added to the group and have a permission to send messages.
 4. Set the "Message Template" as you want, or start with the default one.
    You can use the following placeholders in the message template:
-   - `{project_name}` - the name of the project where the event occurred.
-   - `{url}` - the URL to the event in the Sentry web interface.
-   - `{title}` - the title of the event.
-   - `{message}` - the error message of the event.
+   - `{project_name}` - the name of the project where the issue occurred.
+   - `{url}` - the URL to the issue in the Sentry web interface.
+   - `{title}` - the title of the issue.
+   - `{message}` - the error message of the issue.
    - `tag[<tag_name>]` - the value of the tag with the name `<tag_name>`. For example, `tag[level]`. If the tag is not found, the placeholder will be replaced with `[NA]`.
 
    Note that the Telegram message will be sent in Markdown format, so you can use Markdown formatting in the message template.
