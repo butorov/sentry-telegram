@@ -4,7 +4,7 @@ Plugin for Sentry which allows sending notifications via the [Telegram](https://
 
 As any plugins installation is only available for [self-hosted Sentry](https://github.com/getsentry/self-hosted) instances, this plugin is unavailable for cloud-hosted [Sentry](https://sentry.io/).
 
-Presented plugin tested with Sentry 24.4.x.
+The plugin has been tested with the most recent version of Sentry available at the time - 24.5.x.
 
 # Features
 
@@ -19,7 +19,7 @@ Presented plugin tested with Sentry 24.4.x.
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="/docs/images/telegram-window-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="/docs/images/telegram-window-light.png">
-  <img alt="How will it look like" src="/docs/images/telegram-window-light.png">
+  <img alt="How will it look" src="/docs/images/telegram-window-light.png">
 </picture>
 
 # Compatible versions
@@ -32,7 +32,7 @@ Table of compatibility:
 
 | Plugin version | Compatible Sentry versions | Tested in Sentry versions                           |
 |----------------|----------------------------|-----------------------------------------------------|
-| 0.5.0          | 24.4.x                     | 24.4.1, 24.4.2                                      |
+| 0.5.0          | 24.4.x to 24.5.x           | 24.4.1, 24.4.2, 24.5.0                              |
 | 0.4.0          | 8.x to 9.x                 | 8.9, 9.1.1                                          |
 | 0.3.0          | 8.x to 9.x                 | 8.21, 8.22, 9.0.0, 9.1.0                            |
 | 0.2.2          | 8.x to 9.x                 | 8.21, 8.22, 9.0.0                                   |
