@@ -1,6 +1,7 @@
 # coding: utf-8
 import logging
 from collections import defaultdict
+from typing import List
 
 from django import forms
 from django.utils.translation import gettext_lazy as _
@@ -155,7 +156,7 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
     def get_message_template(self, project):
         return self.get_option('message_template', project)
 
-    def get_receivers(self, project) -> list[list[str, str]]:
+    def get_receivers(self, project) -> List[list[str, str]]:
         receivers = self.get_option('receivers', project).strip()
         if not receivers:
             return []
