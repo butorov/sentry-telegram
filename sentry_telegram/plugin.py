@@ -184,4 +184,4 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
         url = self.build_url(group.project)
         self.logger.debug('Built url: %s' % url)
         for receiver in receivers:
-            safe_execute(self.send_message, url, payload, receiver, _with_transaction=False)
+            safe_execute(self.send_message, url, payload, receiver)
