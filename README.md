@@ -4,7 +4,7 @@ Plugin for Sentry which allows sending notifications via the [Telegram](https://
 
 As any plugins installation is only available for [self-hosted Sentry](https://github.com/getsentry/self-hosted) instances, this plugin is unavailable for cloud-hosted [Sentry](https://sentry.io/).
 
-The plugin has been tested with the most recent version of Sentry available at the time - 24.5.x.
+The plugin has been tested with the most recent version of Sentry available at the time - 24.5.1.
 
 # Features
 
@@ -32,7 +32,8 @@ Table of compatibility:
 
 | Plugin version | Compatible Sentry versions | Tested in Sentry versions                           |
 |----------------|----------------------------|-----------------------------------------------------|
-| 0.5.0          | 24.4.x to 24.5.x           | 24.4.1, 24.4.2, 24.5.0                              |
+| 0.6.0          | 24.5.1, 24.6.x             | 24.5.1                                              |
+| 0.5.0          | 24.4.x to 24.5.0           | 24.4.1, 24.4.2, 24.5.0                              |
 | 0.4.0          | 8.x to 9.x                 | 8.9, 9.1.1                                          |
 | 0.3.0          | 8.x to 9.x                 | 8.21, 8.22, 9.0.0, 9.1.0                            |
 | 0.2.2          | 8.x to 9.x                 | 8.21, 8.22, 9.0.0                                   |
@@ -74,9 +75,9 @@ Table of compatibility:
    pip install sentry-telegram
    ```
    
-   If you want to install a specific version of the plugin, you can specify it in the command (for example, version 0.5.0):
+   If you want to install a specific version of the plugin, you can specify it in the command (for example, version 0.6.0):
    ```bash
-   echo "pip install sentry-telegram==0.5.0" >> sentry/enhance-image.sh
+   echo "pip install sentry-telegram==0.6.0" >> sentry/enhance-image.sh
    ```
 3. Run `./install.sh` script to build the Sentry image with the plugin installed:
    ```bash
